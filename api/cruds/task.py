@@ -2,6 +2,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Tuple, Optional
 from sqlalchemy import select
 from sqlalchemy.engine import Result
+from yahoo_finance_api2 import share
+from yahoo_finance_api2.exceptions import YahooFinanceError
+from datetime import datetime
+from fastapi import HTTPException
 
 import api.models.task as task_model
 import api.schemas.task as task_schema
@@ -51,4 +55,28 @@ async def update_task(
 async def delete_task(db: AsyncSession, original: task_model.Task) -> None:
     await db.delete(original)
     await db.commit()
+
+
+def get_last_stock_data(stock_cd: str):
+    stock_str = stock_cd + ".T"
+    stock_share = share.Share(stock_str)
+    data = None
+
+    try:
+        data = stock_share.get_historical(share.PERIOD_TYPE_DAY, 1, share.FREQUENCY_TYPE_DAY, 1)
+    except YahooFinanceError as e:
+        print(e.message)
+        raise HTTPException(status_code=500, detail="yahoo finance error")
+
+    print('close', type(data["close"][-1]))
+    # 直前の終値
+    last_open = data["open"][-1]
+    last_close = data["close"][-1]
+    last_data = {
+        "close": data["close"][-1],
+        "open": data["open"][-1],
+        "high": data["high"][-1],
+        "low": data["low"][-1],
+    }
+    return last_data
 

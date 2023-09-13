@@ -11,6 +11,7 @@ fastapi = "^0.101.1"
 uvicorn = {extras = ["standard"], version = "^0.23.2"}
 sqlalchemy = "^2.0.20"
 aiomysql = "^0.2.0"
+yahoo-finance-api2 = "^0.0.12"
 
 
 [tool.poetry.group.dev.dependencies]

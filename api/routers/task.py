@@ -41,3 +41,7 @@ async def delete_task(task_id: int, db: AsyncSession = Depends(get_db)):
     return await task_crud.delete_task(db, original=task)
 
 
+@router.get("/stock/{stock_cd}", response_model=task_schema.LastDataResponse)
+def get_last_stock_data(stock_cd: str):
+    return task_crud.get_last_stock_data(stock_cd)
+

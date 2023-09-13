@@ -24,3 +24,10 @@ class TaskCreateResponse(TaskCreate):
     class Config:
         orm_mode = True
 
+
+class LastDataResponse(BaseModel):
+    close: float
+    open: float
+    high: float
+    low: float
+
