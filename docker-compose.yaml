@@ -7,6 +7,7 @@ services:
       - .:/src
     ports:
       - 8000:8000  # ホストマシンのポート8000を、docker内のポート8000に接続する
+    tty: true
 
   db:
     image: mysql:8.0
